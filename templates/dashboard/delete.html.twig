@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block body %}
+
+    {% for exercise in exercises %}
+        <div id="delete_content">
+            <table>
+                <tr>
+                    <th>{{ exercise.getDate | date('Y/m/d') }}</th>
+                    <th>ID: {{ exercise.getId }}</th>
+                    <th>ベンチプレス: {{ exercise.getBenchPress }}kg / {{ exercise.getBenchPressRep }}回</th>
+                    <th>スクワット: {{ exercise.getDeadlift }}kg / {{ exercise.getDeadliftRep }}回</th>
+                    <th>デッドリフト{{ exercise.getSquat }}kg / {{ exercise.getSquatRep }}回</th>
+                    <th><a href=/delete/{{exercise.id}} class=btn btn-danger>削除</a></th>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
+
+{% endblock %}

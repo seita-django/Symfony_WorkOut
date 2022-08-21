@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+    <div class="user_container">
+        <h1>アカウントを作成する</h1>
+        {{ form_start(registrationForm) }}
+
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'パスワード'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+            <br>
+            <button type="submit" class="btn">新規登録</button>
+
+        {{ form_end(registrationForm) }}
+
+        <br>
+        <p><a href="{{ path('app_login') }}">アカウントをすでにお持ちの方</a></p>
+    </div>
+
+{% endblock %}

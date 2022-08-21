@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Main Page{% endblock %}
+
+{% block body %}
+
+    <!----------------------
+        データ前処理 js
+    ----------------------->
+    <!-- レーダーチャート用のデータ処理-->
+    <script>
+        <!-- データがある場合 -->
+        {% if exercises | length > 0 %}
+            let benchPress = '{{ exercises | last.getBenchPress }}'; // ベンチプレスの重量
+            let benchPressRep = '{{ exercises | last.getBenchPressRep }}'; // ベンチプレスの回数
+            let deadlift = '{{ exercises | last.getDeadlift }}'; // デッドリフトの重量
+            let deadliftRep = '{{ exercises | last.getDeadliftRep }}'; // デッドリフトの回数
+            let squat = '{{ exercises | last.getSquat }}'; // スクワットの重量
+            let squatRep = '{{ exercises | last.getSquatRep }}'; // スクワットの回数
+
+        <!-- データがない場合 => デフォルトで0 -->
+        {% else %}
+            let benchPress = '0'; // ベンチプレスの重量
+            let benchPressRep = '0'; // ベンチプレスの回数
+            let deadlift = '0'; // デッドリフトの重量
+            let deadliftRep = '0'; // デッドリフトの回数
+            let squat = '0'; // スクワットの重量
+            let squatRep = '0'; // スクワットの回数
+        {% endif %}
+    </script>
+
+    <!-- グラフチャート用のデータ処理  -->
+    <script>
+        // それぞれのarrayを作成
+        let array_benchPress = [];
+        let array_benchPress_rep = [];
+        let array_deadlift = [];
+        let array_deadlift_rep = [];
+        let array_squat = [];
+        let array_squat_rep = [];
+        let array_weight = [];
+        let array_date = [];
+
+        // データが存在する場合
+        {% if exercises | length > 0 %}
+            // それぞれの要素を毎ループpush
+            {% for ex in exercises %}
+                //Fill up the total queue
+                array_benchPress.push('{{ ex.getBenchPress }}'); // ベンチプレスの重量
+                array_benchPress_rep.push('{{ ex.getBenchPressRep }}'); // ベンチプレスの回数
+                array_deadlift.push('{{ ex.getDeadlift }}'); // デッドリフトの重量
+                array_deadlift_rep.push('{{ ex.getDeadliftRep }}'); // デッドリフトの回数
+                array_squat.push('{{ ex.getSquat}}'); // スクワットの重量
+                array_squat_rep.push('{{ ex.getSquatRep }}'); // スクワットの回数
+                // array_weight.push('{{ ex.getWeight }}'); // 体重
+                array_date.push('{{ ex.getDate | date('Y/m/d')}}') // 日付 => フォーマットでstr型に変更
+            {% endfor %}
+        {% endif %}
+    </script>
+
+    <!----------------------
+         ダッシュボード
+    ----------------------->
+    <div class="parent">
+        <!----------------------
+             レーダーチャート
+        ----------------------->
+        <div class="div1">
+            <!-- レーダーチャートキャンバス -->
+            <div style="width:400px; height:400px; padding:30px 30px 30px 30px;">
+                <canvas id="myChart1" width="200" height="200"></canvas>
+            </div>
+        </div><!--/ div1 -->
+
+        <!----------------------
+               データ出力
+        ----------------------->
+        <div class="div2">
+            <!-- jsより最大筋力の値を呼び出し -->
+            <h3>現在の各部位の最大筋力(1RM):</h3>
+            <h4>胸: <span id="html_benchPress"></span> kg</h4>
+            <h4>背中: <span id="html_deadlift"></span> kg</h4>
+            <h4>足: <span id="html_squat"></span> kg</h4>
+        </div><!--/ div2 -->
+
+        <!----------------------
+              グラフチャート
+        ----------------------->
+        <div class="div3">
+            <!-- グラフチャートキャンパス -->
+            <canvas id="myChart2" width="300" height="100"></canvas>
+        </div><!--/div3 -->
+
+        <!----------------------
+               データ入力
+        ----------------------->
+        <div class="div4">
+            <!-- 入力フォームボックス -->
+
+            <div id="input_box">
+
+                <!-- ユーザ名の出力 -->
+                {% if app.user %}
+                    <h2>ようこそ {{ app.user.userIdentifier }} さん</h2>
+                {% endif %}
+
+                {{ form_start(form) }}
+                    <!--Memo: labelをform_labelの方を使用するとなぜか見栄えが悪くなるため、今回はそのままhtmlでラベル作成 -->
+                    <label>ベンチプレス</label>
+                    {{ form_widget(form.bench_press) }}
+                    <label>回数</label>
+                    {{ form_widget(form.bench_press_rep) }}
+                    <label>デッドリフト</label>
+                    {{ form_widget(form.deadlift) }}
+                    <label>回数</label>
+                    {{ form_widget(form.deadlift_rep) }}
+                    <label>スクワット</label>
+                    {{ form_widget(form.squat) }}
+                    <label>回数</label>
+                    {{ form_widget(form.squat_rep) }}
+                    <label>体重</label>
+                    {{ form_widget(form.weight) }}
+                    <label>身長</label>
+                    {{ form_widget(form.height) }}
+                    <button type="submit" class="btn btn-primary">作成</button>
+                {{ form_end(form) }}
+            </div><!--/input_box -->
+        </div><!--/div4 -->
+
+    </div><!--/parent -->
+
+{% endblock %}

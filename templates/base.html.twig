@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('build/main.css') }}">
+            <!-- bootstrap-->
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        {% endblock %}
+
+        {% block javascripts %}
+            <!-- chartライブラリ -->
+            {{ encore_entry_script_tags('js/chart') }}
+            <!-- 最大筋力の計算用関数 -->
+            {{ encore_entry_script_tags('js/maxStrength') }}
+            <!-- レーダーチャート -->
+            {{ encore_entry_script_tags('js/radarChart') }}
+            <!-- グラフチャート -->
+            {{ encore_entry_script_tags('js/graphChart') }}
+        {% endblock %}
+
+        <!---------------------
+               共通ヘッダー
+        ---------------------->
+        <div class="header">
+            <a href="{{ path('app_dashboard') }}" class="logo">Work-Out Note</a>
+            <!-- Memo: それぞれのルートのページにactiveをつける -->
+            <div class="header-right">
+                <a {% if app.request.attributes.get('_route') == 'app_dashboard' %} class="active"{% endif %} href="{{ path('app_dashboard') }}">メインページ</a>
+                <a {% if app.request.attributes.get('_route') == 'app_list' %} class="active"{% endif %} href="{{ path('app_list') }}">データ削除</a>
+                <a {% if app.request.attributes.get('_route') == 'app_register' %} class="active"{% endif %} href="{{ path('app_register') }}">新規登録</a>
+                <a {% if app.request.attributes.get('_route') == 'app_login' %} class="active"{% endif %} href="{{ path('app_login') }}">ログイン</a>
+            </div><!--/header-right -->
+        </div><!--/header -->
+
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>
