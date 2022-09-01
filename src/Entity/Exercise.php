@@ -41,6 +41,9 @@ class Exercise
     #[ORM\Column]
     private ?int $squat_rep = null;
 
+    #[ORM\ManyToOne(inversedBy: 'exercises')]
+    private ?User $User = null;
+
 
     public function getId(): ?int
     {
@@ -151,6 +154,18 @@ class Exercise
     public function setSquatRep(int $squat_rep): self
     {
         $this->squat_rep = $squat_rep;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
+
         return $this;
     }
 }

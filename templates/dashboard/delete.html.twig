@@ -4,19 +4,27 @@
 
 {% block body %}
 
-    {% for exercise in exercises %}
-        <div id="delete_content">
-            <table>
-                <tr>
-                    <th>{{ exercise.getDate | date('Y/m/d') }}</th>
-                    <th>ID: {{ exercise.getId }}</th>
-                    <th>ベンチプレス: {{ exercise.getBenchPress }}kg / {{ exercise.getBenchPressRep }}回</th>
-                    <th>スクワット: {{ exercise.getDeadlift }}kg / {{ exercise.getDeadliftRep }}回</th>
-                    <th>デッドリフト{{ exercise.getSquat }}kg / {{ exercise.getSquatRep }}回</th>
-                    <th><a href=/delete/{{exercise.id}} class=btn btn-danger>削除</a></th>
-                </tr>
-            </table>
+    <!--　データがある場合 -->
+    {% if exercises | length  > 0 %}
+        {% for exercise in exercises %}
+            <div id="delete_content">
+                <table class="responsive_table">
+                    <tr>
+                        <th>{{ exercise.getDate | date('Y/m/d') }}</th>
+                        <td>ID: {{ exercise.getId }}</td>
+                        <td>ベンチプレス: {{ exercise.getBenchPress }}kg / {{ exercise.getBenchPressRep }}回</td>
+                        <td>スクワット: {{ exercise.getDeadlift }}kg / {{ exercise.getDeadliftRep }}回</td>
+                        <td>デッドリフト{{ exercise.getSquat }}kg / {{ exercise.getSquatRep }}回</td>
+                        <td><a href=/delete/{{exercise.id}} class=btn btn-danger>削除</a></td>
+                    </tr>
+                </table>
+            </div>
+        {% endfor %}
+    <!-- データがない場合 -->
+    {% else %}
+        <div id="none_data">
+            <h1>データがありません</h1>
         </div>
-    {% endfor %}
+    {% endif %}
 
 {% endblock %}

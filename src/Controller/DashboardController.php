@@ -8,8 +8,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\TextType; /* TextType::class */
 
+use Symfony\Component\Security\Core\Security;
+
 // データベース
 use App\Entity\Exercise;
+use App\Entity\User;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+
 // リクエスト
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,8 +27,8 @@ class DashboardController extends AbstractController
     /**
      * @return ('dashboard/index.html.twig')
      */
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(Request $request, ManagerRegistry $doctrine): Response
+    #[Route('/dashboard/{id}', name: 'app_dashboard')]
+    public function index(Request $request, ManagerRegistry $doctrine, #[CurrentUser] ?User $user, $id): Response
     {
         // フォームの組立
         $exercises = new Exercise(); // 後で利用したいのでPostインスタンスを変数に入れる
@@ -44,22 +49,29 @@ class DashboardController extends AbstractController
             // エンティティを永続化
             $exercises->setDate(new \DateTime());
 
-            $em = $doctrine->getManager();
+            // Many to One Relationship, テーブル同士をリンク
+            $exercises->setUser($user);
 
+
+            $em = $doctrine->getManager();
             $em->persist($exercises);
+            $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('app_dashboard');
+            return $this->redirectToRoute('app_dashboard', ['id' => $this->getUser()->getUserIdentifier()]);
         }
 
         # html内で使用できるようにする
-        $exercises = $doctrine->getRepository(Exercise::class)->findAll();
+        # それぞれのユーザごとのデータを表示
+        $exercises = $doctrine->getRepository(Exercise::class)->findBy(['User' => $user->getId()]);
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
             'form' => $form->createView(), // DBのフォーム入力
             'exercises' => $exercises,   // html(+js)でデータベースを使用できるようにDBのインスタンスを返しておく
+            // 'user' => $user->getEmail(), // ユーザ確認のテスト用
+            // 'user_id' => $user->getId(), // ユーザ確認のテスト用
         ]);
     }
 
@@ -72,9 +84,9 @@ class DashboardController extends AbstractController
      * @return ('dashboard/delete.html.twig')
      */
     #[Route('/list', name: 'app_list')]
-    public function listAction(Request $request, ManagerRegistry $doctrine)
+    public function listAction(Request $request, ManagerRegistry $doctrine, #[CurrentUser] ?User $user)
     {
-        $exercises = $doctrine->getRepository(Exercise::class)->findAll();
+        $exercises = $doctrine->getRepository(Exercise::class)->findBy(['User' => $user->getId()]);;
         // return $this->redirectToRoute('app_fix');
         return $this->render('dashboard/delete.html.twig',[
             'exercises' => $exercises,
@@ -91,10 +103,10 @@ class DashboardController extends AbstractController
      * @return ('app_lsit') => delete.html.twig
      */
     #[Route('/delete/{id}', name: 'app_delete')]
-    public function delete(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function delete(Request $request, ManagerRegistry $doctrine, $id, #[CurrentUser] ?User $user): Response
     {
         $em = $doctrine->getManager();
-        $exercise = $em->getRepository(Exercise::class)->find($id);
+        $exercise = $em->getRepository(Exercise::class)->find($id);;
 
         $em->remove($exercise);
         $em->flush();

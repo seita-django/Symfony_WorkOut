@@ -22,14 +22,17 @@
             {{ encore_entry_script_tags('js/graphChart') }}
         {% endblock %}
 
+        <!-- Responsive -->
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
         <!---------------------
                共通ヘッダー
         ---------------------->
         <div class="header">
-            <a href="{{ path('app_dashboard') }}" class="logo">Work-Out Note</a>
+            <a href="{{ path('app_dashboard', {id: '{{ exercises.getID }}' }) }}" class="logo">Work-Out Note</a>
             <!-- Memo: それぞれのルートのページにactiveをつける -->
             <div class="header-right">
-                <a {% if app.request.attributes.get('_route') == 'app_dashboard' %} class="active"{% endif %} href="{{ path('app_dashboard') }}">メインページ</a>
+                <a {% if app.request.attributes.get('_route') == 'app_dashboard' %} class="active"{% endif %} href="{{ path('app_dashboard', {id: '{{ exercises.getID }}'}) }}">メインページ</a>
                 <a {% if app.request.attributes.get('_route') == 'app_list' %} class="active"{% endif %} href="{{ path('app_list') }}">データ削除</a>
                 <a {% if app.request.attributes.get('_route') == 'app_register' %} class="active"{% endif %} href="{{ path('app_register') }}">新規登録</a>
                 <a {% if app.request.attributes.get('_route') == 'app_login' %} class="active"{% endif %} href="{{ path('app_login') }}">ログイン</a>

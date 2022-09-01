@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+
 class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
@@ -40,7 +41,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName, ): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
@@ -50,7 +51,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
 
         // ログイン時にdashboard画面に飛ぶ
-        return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('app_dashboard', ['id' => $token->getUser()->getUserIdentifier()]));
 
         // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
