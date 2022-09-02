@@ -6,7 +6,7 @@
     "name": "vendor-name/workout",
     "description": "Symfony Framework",
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.7",
