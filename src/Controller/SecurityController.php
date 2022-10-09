@@ -8,12 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * ユーザのログイン・ログアウト用のクラス
+ * class for login and log out
  */
 class SecurityController extends AbstractController
 {
     /**
-     * ログイン ページ
+     * log in page
      *
      * @param　AuthenticationUtils $authenticationUtils
      *
@@ -42,7 +42,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * ログアウト ページ
+     * log out page
      */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void

@@ -5,22 +5,22 @@
 {% block body %}
 
     <div class="user_container">
-        <h1>アカウントを作成する</h1>
+        <h1>create account</h1>
         {{ form_start(registrationForm) }}
 
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
-            label: 'パスワード'
+            label: 'password'
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
 
             <br>
-            <button type="submit" class="btn">新規登録</button>
+            <button type="submit" class="btn">sign up</button>
 
         {{ form_end(registrationForm) }}
 
         <br>
-        <p><a href="{{ path('app_login') }}">アカウントをすでにお持ちの方</a></p>
+        <p><a href="{{ path('app_login') }}">already have an account</a></p>
     </div>
 
 {% endblock %}

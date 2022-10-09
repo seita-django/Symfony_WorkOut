@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <!--　データがある場合 -->
+    <!--　when there is data -->
     {% if exercises | length  > 0 %}
         {% for exercise in exercises %}
             <div id="delete_content">
@@ -12,18 +12,18 @@
                     <tr>
                         <th>{{ exercise.getDate | date('Y/m/d') }}</th>
                         <td>ID: {{ exercise.getId }}</td>
-                        <td>ベンチプレス: {{ exercise.getBenchPress }}kg / {{ exercise.getBenchPressRep }}回</td>
-                        <td>スクワット: {{ exercise.getDeadlift }}kg / {{ exercise.getDeadliftRep }}回</td>
-                        <td>デッドリフト{{ exercise.getSquat }}kg / {{ exercise.getSquatRep }}回</td>
-                        <td><a href=/delete/{{exercise.id}} class=btn btn-danger>削除</a></td>
+                        <td>Bench press: {{ exercise.getBenchPress }}kg / {{ exercise.getBenchPressRep }} times</td>
+                        <td>Squat: {{ exercise.getDeadlift }}kg / {{ exercise.getDeadliftRep }} times</td>
+                        <td>Deadlift {{ exercise.getSquat }}kg / {{ exercise.getSquatRep }} times</td>
+                        <td><a href=/delete/{{exercise.id}} class=btn btn-danger>Delete</a></td>
                     </tr>
                 </table>
             </div>
         {% endfor %}
-    <!-- データがない場合 -->
+    <!-- when there is no data -->
     {% else %}
         <div id="none_data">
-            <h1>データがありません</h1>
+            <h1>No Data</h1>
         </div>
     {% endif %}
 

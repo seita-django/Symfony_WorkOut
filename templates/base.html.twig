@@ -12,13 +12,13 @@
         {% endblock %}
 
         {% block javascripts %}
-            <!-- chartライブラリ -->
+            <!-- chart.js -->
             {{ encore_entry_script_tags('js/chart') }}
-            <!-- 最大筋力の計算用関数 -->
+            <!-- function to calculate the maximum muscle strength -->
             {{ encore_entry_script_tags('js/maxStrength') }}
-            <!-- レーダーチャート -->
+            <!-- radar chart -->
             {{ encore_entry_script_tags('js/radarChart') }}
-            <!-- グラフチャート -->
+            <!-- graph chart -->
             {{ encore_entry_script_tags('js/graphChart') }}
         {% endblock %}
 
@@ -26,16 +26,16 @@
         <meta name="viewport" content="width=device-width,initial-scale=1">
 
         <!---------------------
-               共通ヘッダー
+               Shared Header
         ---------------------->
         <div class="header">
             <a href="{{ path('app_dashboard', {id: '{{ exercises.getID }}' }) }}" class="logo">Work-Out Note</a>
-            <!-- Memo: それぞれのルートのページにactiveをつける -->
+            <!-- Memo: set active for each route of page-->
             <div class="header-right">
-                <a {% if app.request.attributes.get('_route') == 'app_dashboard' %} class="active"{% endif %} href="{{ path('app_dashboard', {id: '{{ exercises.getID }}'}) }}">メインページ</a>
-                <a {% if app.request.attributes.get('_route') == 'app_list' %} class="active"{% endif %} href="{{ path('app_list') }}">データ削除</a>
-                <a {% if app.request.attributes.get('_route') == 'app_register' %} class="active"{% endif %} href="{{ path('app_register') }}">新規登録</a>
-                <a {% if app.request.attributes.get('_route') == 'app_login' %} class="active"{% endif %} href="{{ path('app_login') }}">ログイン</a>
+                <a {% if app.request.attributes.get('_route') == 'app_dashboard' %} class="active"{% endif %} href="{{ path('app_dashboard', {id: '{{ exercises.getID }}'}) }}">Main page</a>
+                <a {% if app.request.attributes.get('_route') == 'app_list' %} class="active"{% endif %} href="{{ path('app_list') }}">Delete</a>
+                <a {% if app.request.attributes.get('_route') == 'app_register' %} class="active"{% endif %} href="{{ path('app_register') }}">Sign up</a>
+                <a {% if app.request.attributes.get('_route') == 'app_login' %} class="active"{% endif %} href="{{ path('app_login') }}">Log in </a>
             </div><!--/header-right -->
         </div><!--/header -->
 

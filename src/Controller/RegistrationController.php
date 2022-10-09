@@ -14,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 /**
- * ユーザ新規作成のクラス
+ * class for sign in
  */
 class RegistrationController extends AbstractController
 {
     /**
-     * 新規作成 ページ
+     * Sign in page
      *
      * @param　UserPasswordHasherInterface $userPasswordHasher
      * @param UserAuthenticatorInterface $userAuthenticator
@@ -29,9 +29,9 @@ class RegistrationController extends AbstractController
      * @return ('dashboard/registration.html.twig')
      */
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppCustomAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $PasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppCustomAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
-        // ユーザ作成
+        // Create a user
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -39,13 +39,13 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
-                $userPasswordHasher->hashPassword(
+                $PasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
             );
 
-            // DBに保存
+            // Save it in DB
             $entityManager->persist($user);
             $entityManager->flush();
 

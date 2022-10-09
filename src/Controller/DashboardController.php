@@ -10,17 +10,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType; /* TextType::class */
 
 use Symfony\Component\Security\Core\Security;
 
-// データベース
+// Database
 use App\Entity\Exercise;
 use App\Entity\User;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-// リクエスト
+// Request
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
- * デフォルトのControllerクラス
+ * Defualt controller class
  */
 class DashboardController extends AbstractController
 {
@@ -30,28 +30,27 @@ class DashboardController extends AbstractController
     #[Route('/dashboard/{id}', name: 'app_dashboard')]
     public function index(Request $request, ManagerRegistry $doctrine, #[CurrentUser] ?User $user, $id): Response
     {
-        // フォームの組立
-        $exercises = new Exercise(); // 後で利用したいのでPostインスタンスを変数に入れる
+        // create form
+        $exercises = new Exercise();
         $form = $this->createFormBuilder($exercises)
-            ->add('bench_press', TextType::class, array('label' => 'ベンチプレス - 重量 (kg)', 'attr' => array('style' => 'margin-bottom:12px', )),)
-            ->add('bench_press_rep', TextType::class, array('label' => '回数', 'attr' => array('style' => 'margin-bottom:12px',)))
-            ->add('deadlift', TextType::class, array('label' => 'デッドリフト - 重量 (kg)', 'attr' => array('style' => 'margin-bottom:12px')))
-            ->add('deadlift_rep', TextType::class, array('label' => '回数', 'attr' => array('style' => 'margin-bottom:12px')))
-            ->add('squat', TextType::class, array('label' => 'スクワット - 重量 (kg)', 'attr' => array('style' => 'margin-bottom:12px')))
-            ->add('squat_rep', TextType::class, array('label' => '回数', 'attr' => array('style' => 'margin-bottom:12px')))
-            ->add('weight', TextType::class, array('label' => '体重 (kg)', 'attr' => array('style' => 'margin-bottom:12px')))
-            ->add('height', TextType::class, array('label' => '身長 (cm)', 'attr' => array('style' => 'margin-bottom:12px')))
+            ->add('bench_press', TextType::class, array('label' => 'bench press - weight (kg)', 'attr' => array('style' => 'margin-bottom:12px', )),)
+            ->add('bench_press_rep', TextType::class, array('label' => 'times', 'attr' => array('style' => 'margin-bottom:12px',)))
+            ->add('deadlift', TextType::class, array('label' => 'dead lift - weight (kg)', 'attr' => array('style' => 'margin-bottom:12px')))
+            ->add('deadlift_rep', TextType::class, array('label' => 'times', 'attr' => array('style' => 'margin-bottom:12px')))
+            ->add('squat', TextType::class, array('label' => 'squat - weight (kg)', 'attr' => array('style' => 'margin-bottom:12px')))
+            ->add('squat_rep', TextType::class, array('label' => 'times', 'attr' => array('style' => 'margin-bottom:12px')))
+            ->add('weight', TextType::class, array('label' => 'weight (kg)', 'attr' => array('style' => 'margin-bottom:12px')))
+            ->add('height', TextType::class, array('label' => 'height (cm)', 'attr' => array('style' => 'margin-bottom:12px')))
             ->getForm();
 
-        // PSST判定&バリデーション
+        // PSST and validation
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // エンティティを永続化
+
             $exercises->setDate(new \DateTime());
 
-            // Many to One Relationship, テーブル同士をリンク
+            // Many to One Relationship => link two tables (user and exercises)
             $exercises->setUser($user);
-
 
             $em = $doctrine->getManager();
             $em->persist($exercises);
@@ -61,22 +60,20 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute('app_dashboard', ['id' => $this->getUser()->getUserIdentifier()]);
         }
 
-        # html内で使用できるようにする
-        # それぞれのユーザごとのデータを表示
+        # make it possible to use them in html
+        # show data for a certain user
         $exercises = $doctrine->getRepository(Exercise::class)->findBy(['User' => $user->getId()]);
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
-            'form' => $form->createView(), // DBのフォーム入力
-            'exercises' => $exercises,   // html(+js)でデータベースを使用できるようにDBのインスタンスを返しておく
-            // 'user' => $user->getEmail(), // ユーザ確認のテスト用
-            // 'user_id' => $user->getId(), // ユーザ確認のテスト用
+            'form' => $form->createView(), // input form
+            'exercises' => $exercises,   // return DB instance so that I can use it in html(+js)
         ]);
     }
 
     /**
-     * データベース リスト表示
+     * Database show the list
      *
      * @param \ManagerRegistry $doctrine
      * @param \MailerInterface $mailer
@@ -86,7 +83,7 @@ class DashboardController extends AbstractController
     #[Route('/list', name: 'app_list')]
     public function listAction(Request $request, ManagerRegistry $doctrine, #[CurrentUser] ?User $user)
     {
-        $exercises = $doctrine->getRepository(Exercise::class)->findBy(['User' => $user->getId()]);;
+        $exercises = $doctrine->getRepository(Exercise::class)->findBy(['User' => $user->getId()]);
         // return $this->redirectToRoute('app_fix');
         return $this->render('dashboard/delete.html.twig',[
             'exercises' => $exercises,
@@ -94,11 +91,11 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * データベース リスト 削除
+     * Database delete list
      *
      * @param \ManagerRegistry $doctrine
      * @param \MailerInterface $mailer
-     * @param $id => 指定のデータベース
+     * @param $id => selected data
      *
      * @return ('app_lsit') => delete.html.twig
      */

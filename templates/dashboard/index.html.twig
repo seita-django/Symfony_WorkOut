@@ -5,33 +5,33 @@
 {% block body %}
 
     <!----------------------
-        データ前処理 js
+        handling data for js file
     ----------------------->
-    <!-- レーダーチャート用のデータ処理-->
+    <!-- radar chart -->
     <script>
-        <!-- データがある場合 -->
+        // when there is data
         {% if exercises | length > 0 %}
-            let benchPress = '{{ exercises | last.getBenchPress }}'; // ベンチプレスの重量
-            let benchPressRep = '{{ exercises | last.getBenchPressRep }}'; // ベンチプレスの回数
-            let deadlift = '{{ exercises | last.getDeadlift }}'; // デッドリフトの重量
-            let deadliftRep = '{{ exercises | last.getDeadliftRep }}'; // デッドリフトの回数
-            let squat = '{{ exercises | last.getSquat }}'; // スクワットの重量
-            let squatRep = '{{ exercises | last.getSquatRep }}'; // スクワットの回数
+            let benchPress = '{{ exercises | last.getBenchPress }}'; // weight of bench press
+            let benchPressRep = '{{ exercises | last.getBenchPressRep }}'; // times of bench press
+            let deadlift = '{{ exercises | last.getDeadlift }}'; // weight of dead lift
+            let deadliftRep = '{{ exercises | last.getDeadliftRep }}'; // times of dead lift
+            let squat = '{{ exercises | last.getSquat }}'; // weight of squat
+            let squatRep = '{{ exercises | last.getSquatRep }}'; // times of squat
 
-        <!-- データがない場合 => デフォルトで0 -->
+        <!-- when there is no data => assign them 0 as default -->
         {% else %}
-            let benchPress = '0'; // ベンチプレスの重量
-            let benchPressRep = '0'; // ベンチプレスの回数
-            let deadlift = '0'; // デッドリフトの重量
-            let deadliftRep = '0'; // デッドリフトの回数
-            let squat = '0'; // スクワットの重量
-            let squatRep = '0'; // スクワットの回数
+            let benchPress = '0'; // weight of bench press
+            let benchPressRep = '0'; // times of bench press
+            let deadlift = '0'; // weight of dead lift
+            let deadliftRep = '0'; // times of dead lift
+            let squat = '0'; // weight of squat
+            let squatRep = '0'; // times of squat
         {% endif %}
     </script>
 
-    <!-- グラフチャート用のデータ処理  -->
+    <!-- handling data for the graph chart  -->
     <script>
-        // それぞれのarrayを作成
+        // create array for each
         let array_benchPress = [];
         let array_benchPress_rep = [];
         let array_deadlift = [];
@@ -41,90 +41,90 @@
         let array_weight = [];
         let array_date = [];
 
-        // データが存在する場合
+        // when there is data
         {% if exercises | length > 0 %}
-            // それぞれの要素を毎ループpush
+            // push each data in loop
             {% for ex in exercises %}
-                //Fill up the total queue
-                array_benchPress.push('{{ ex.getBenchPress }}'); // ベンチプレスの重量
-                array_benchPress_rep.push('{{ ex.getBenchPressRep }}'); // ベンチプレスの回数
-                array_deadlift.push('{{ ex.getDeadlift }}'); // デッドリフトの重量
-                array_deadlift_rep.push('{{ ex.getDeadliftRep }}'); // デッドリフトの回数
-                array_squat.push('{{ ex.getSquat}}'); // スクワットの重量
-                array_squat_rep.push('{{ ex.getSquatRep }}'); // スクワットの回数
-                // array_weight.push('{{ ex.getWeight }}'); // 体重
-                array_date.push('{{ ex.getDate | date('Y/m/d')}}') // 日付 => フォーマットでstr型に変更
+                // Fill up the total queue
+                array_benchPress.push('{{ ex.getBenchPress }}'); // weight of bench press
+                array_benchPress_rep.push('{{ ex.getBenchPressRep }}'); // times of bench press
+                array_deadlift.push('{{ ex.getDeadlift }}'); // weight of dead lift
+                array_deadlift_rep.push('{{ ex.getDeadliftRep }}'); // times of dead lift
+                array_squat.push('{{ ex.getSquat}}'); // weight of squat
+                array_squat_rep.push('{{ ex.getSquatRep }}'); // times of squat
+                // array_weight.push('{{ ex.getWeight }}'); // weight
+                array_date.push('{{ ex.getDate | date('Y/m/d')}}') // date => change it to str in format
             {% endfor %}
         {% endif %}
     </script>
 
     <!----------------------
-         ダッシュボード
+         Dashboard
     ----------------------->
-    <!-- ユーザ名の表示 -->
+    <!-- display user name -->
     {% if app.user %}
-        <h4>ようこそ {{ app.user.userIdentifier }} さん</h4>
+        <h4>Hi, {{ app.user.userIdentifier }}</h4>
     {% endif %}
 
     <div class="parent">
         <!----------------------
-             レーダーチャート
+             Radar Chart
         ----------------------->
         <div class="div1">
-            <!-- レーダーチャートキャンバス -->
+            <!-- campus for radar chart -->
             <div style="width:400px; height:400px; padding:30px 30px 30px 30px;">
                 <canvas id="myChart1" width="200" height="200"></canvas>
             </div>
         </div><!--/ div1 -->
 
         <!----------------------
-               データ出力
+               display data
         ----------------------->
         <div class="div2">
-            <!-- jsより最大筋力の値を呼び出し -->
-            <h3>現在の各部位の最大筋力(1RM):</h3>
-            <h4>胸: <span id="html_benchPress"></span> kg</h4>
-            <h4>背中: <span id="html_deadlift"></span> kg</h4>
-            <h4>足: <span id="html_squat"></span> kg</h4>
+            <!-- calling maximum muscle strength from js file -->
+            <h3>Current maximum muscle strength (1RM):</h3>
+            <h4>chest: <span id="html_benchPress"></span> kg</h4>
+            <h4>back: <span id="html_deadlift"></span> kg</h4>
+            <h4>legs: <span id="html_squat"></span> kg</h4>
         </div><!--/ div2 -->
 
         <!----------------------
-              グラフチャート
+              graph chart
         ----------------------->
         <div class="div3">
-            <!-- グラフチャートキャンパス -->
+            <!-- campus of graph chart -->
             <canvas id="myChart2" width="300" height="100"></canvas>
         </div><!--/div3 -->
 
         <!----------------------
-               データ入力
+               Input data
         ----------------------->
         <div class="div4">
 
-            <!-- 入力フォームボックス -->
+            <!-- input form for data -->
             <div id="input_box">
 
-                <h3>データ入力</h3>
+                <h3>Input data</h3>
 
                 {{ form_start(form) }}
-                    <!--Memo: labelをform_labelの方を使用するとなぜか見栄えが悪くなるため、今回はそのままhtmlでラベル作成 -->
-                    <label>ベンチプレス</label>
+                    <!--Memo: when I use "form_label", it doesn't look good somehow, so I fix it in html this time -->
+                    <label>bench press</label>
                     {{ form_widget(form.bench_press) }}
-                    <label>回数</label>
+                    <label>times</label>
                     {{ form_widget(form.bench_press_rep) }}
-                    <label>デッドリフト</label>
+                    <label>Dead lift</label>
                     {{ form_widget(form.deadlift) }}
-                    <label>回数</label>
+                    <label>times</label>
                     {{ form_widget(form.deadlift_rep) }}
-                    <label>スクワット</label>
+                    <label>Squat</label>
                     {{ form_widget(form.squat) }}
-                    <label>回数</label>
+                    <label>times</label>
                     {{ form_widget(form.squat_rep) }}
-                    <label>体重</label>
+                    <label>Weight</label>
                     {{ form_widget(form.weight) }}
-                    <label>身長</label>
+                    <label>Height</label>
                     {{ form_widget(form.height) }}
-                    <button type="submit" class="btn btn-primary">作成</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 {{ form_end(form) }}
             </div><!--/input_box -->
         </div><!--/div4 -->

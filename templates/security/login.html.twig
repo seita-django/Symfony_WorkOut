@@ -12,14 +12,14 @@
 
         {% if app.user %}
             <div class="mb-3">
-                {{ app.user.userIdentifier }}としてログインしています。 <a href="{{ path('app_logout') }}">ログアウト</a>
+                You are logging in as {{ app.user.userIdentifier }} <a href="{{ path('app_logout') }}">Log out</a>
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">既にアカウントをお持ちの方</h1>
+        <h1 class="h3 mb-3 font-weight-normal">already have an account</h1>
         <label for="inputEmail">Email</label>
         <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-        <label for="inputPassword">パスワード</label>
+        <label for="inputPassword">password</label>
         <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
         <input type="hidden" name="_csrf_token"
@@ -38,7 +38,7 @@
         #}
         <br>
         <button class="btn btn-lg btn-primary" type="submit">
-            ログイン
+            Log in
         </button>
 
     </form>

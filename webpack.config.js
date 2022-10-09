@@ -21,15 +21,15 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('js/chart', './assets/js/chart.js')
     .addEntry('js/radarChart', './assets/js/radarChart.js')
     .addEntry('js/graphChart', './assets/js/graphChart.js')
     .addEntry('js/maxStrength', './assets/js/maxStrength.js')
+    .addEntry('js/chart', './assets/js/chart.js')
 
-    // CSSのエントリーファイル、コンパイルし`web/build/main.css`ファイルとして出力
+    // Entry file for CSS、compile and output `web/build/main.css` as file
     .addStyleEntry('main', './assets/scss/main.scss')
 
-    // sass-loaderを有効化
+    // sass-loader
     .enableSassLoader()
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
